@@ -23,6 +23,10 @@ jobs:
           format: 'table'
           output: 'trivy-report.txt'
           severity: 'HIGH,CRITICAL'
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
 #      - name: Slack actions vulnerabilities found
 #        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
 #        uses: slackapi/slack-github-action@v1.26.0
@@ -36,23 +40,23 @@ jobs:
 #            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Read Trivy report content
         run: cat trivy-report.txt
-      - name: Read Trivy report content
-        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
-        id: read_trivy_report
+      - name: Download Trivy scan results
+        uses: actions/download-artifact@v2
+        with:
+          name: trivy-results.sarif
+      - name: Read Trivy scan results
         run: |
-          trivy_output=$(aquasecurity/trivy-action@master)
-          echo "$trivy_output" > custom_trivy_output.txt
-      - name: Upload report
-        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
-        uses: MeilCli/slack-upload-file@v4
+          trivy_results=$(cat trivy-results.sarif)
+          echo "$trivy_results" > trivy-results.txt
+      - uses: MeilCli/slack-upload-file@v4
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          content: ${{ steps.read_trivy_report.outputs.trivy_output }}
+          content: ${{ steps.read.outputs.trivy_results_content }}
           file_type: 'text'
-          file_name: 'custom_trivy_output.txt'
-          title: 'title of file'
-          initial_comment: 'post by slack-upload-file'
+          file_name: 'trivy-results.txt'
+          title: 'Trivy Results'
+          initial_comment: 'Trivy scan results'
   build_push_docker:
     needs: scan_repo
     runs-on: ubuntu-latest
