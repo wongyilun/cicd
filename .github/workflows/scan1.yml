@@ -34,6 +34,12 @@ jobs:
         env:
             SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
             SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      - name: Upload Trivy report to Slack
+        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
+        run: |
+          curl -F file=@trivy-report.txt -F channels=D071X6LDSUE -F token=$SLACK_TOKEN https://slack.com/api/files.upload
+        env:
+          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
 #      - name: Upload report
 #        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
 #        uses: MeilCli/slack-upload-file@v4
