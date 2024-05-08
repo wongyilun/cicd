@@ -43,6 +43,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: trivy-results
+          path: trivy-results.sarif
           
       - name: Convert SARIF to text
         run: |
