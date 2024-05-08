@@ -20,8 +20,8 @@ jobs:
         with:
           scan-type: 'fs'
           ignore-unfixed: true
-          format: 'table'
-          output: 'trivy-report.txt'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
           severity: 'HIGH,CRITICAL'
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
