@@ -36,10 +36,15 @@ jobs:
             SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Upload Trivy report to Slack
         if: steps.trivy_scan.outputs.vulnerabilities != '[]'
-        run: |
-          curl -F file=@trivy-report.txt -F channels=D071X6LDSUE -F token=$SLACK_TOKEN https://slack.com/api/files.upload
-        env:
-          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
+        uses: MeilCli/slack-upload-file@v4
+        with:
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channel_id: D071X6LDSUE
+          content: 'file content'
+          file_type: 'text'
+          file_name: 'trivy-report.txt'
+          title: 'trivy report'
+          initial_comment: 'post by slack-upload-file'
 #      - name: Upload report
 #        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
 #        uses: MeilCli/slack-upload-file@v4
