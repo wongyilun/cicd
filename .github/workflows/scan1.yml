@@ -23,10 +23,11 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'HIGH,CRITICAL'
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
+      - name: Upload Trivy scan report to artifacts
+        uses: actions/upload-artifact@v2
         with:
-          sarif_file: 'trivy-results.sarif'
+          name: trivy-results
+          path: trivy-results.sarif
 #      - name: Slack actions vulnerabilities found
 #        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
 #        uses: slackapi/slack-github-action@v1.26.0
@@ -38,25 +39,25 @@ jobs:
 #        env:
 #            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 #            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      - name: Read Trivy report content
-        run: cat trivy-report.txt
-      - name: Download Trivy scan results
+      - name: Download Trivy scan report artifact
         uses: actions/download-artifact@v2
         with:
-          name: trivy-results.sarif
-      - name: Read Trivy scan results
+          name: trivy-results
+          
+      - name: Convert SARIF to text
         run: |
-          trivy_results=$(cat trivy-results.sarif)
-          echo "$trivy_results" > trivy-results.txt
-      - uses: MeilCli/slack-upload-file@v4
+          sarif-to-text trivy-results.sarif > trivy-results.txt
+
+      - name: Upload Trivy report to Slack
+        uses: MeilCli/slack-upload-file@v4
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          content: ${{ steps.read.outputs.trivy_results_content }}
+          content: ${{ steps.convert.outputs.text_content }}
           file_type: 'text'
           file_name: 'trivy-results.txt'
-          title: 'Trivy Results'
-          initial_comment: 'Trivy scan results'
+          title: 'Trivy Report'
+          initial_comment: 'Trivy scan report uploaded'
   build_push_docker:
     needs: scan_repo
     runs-on: ubuntu-latest
