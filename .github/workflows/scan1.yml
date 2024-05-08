@@ -35,7 +35,7 @@ jobs:
             SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
             SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Read Trivy report content
-        run: echo cat trivy-report.txt
+        run: cat trivy-report.txt
       - name: Upload report
         if: steps.trivy_scan.outputs.vulnerabilities != '[]'
         uses: MeilCli/slack-upload-file@v4
