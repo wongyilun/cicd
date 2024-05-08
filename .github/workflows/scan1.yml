@@ -40,7 +40,7 @@ jobs:
         with:
           payload: |
             {
-            "text": "${{ cat trivy-report.txt }}"
+            "text": "cat ${{ trivy-report.txt }}"
             }
         env:
             SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
