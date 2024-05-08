@@ -45,7 +45,12 @@ jobs:
         with:
           payload: |
             {
+            "text": "Trivy report",
+            "attachments": [
+            {
             "text": "${{ steps.read_trivy_report.outputs.report_content }}"
+            }
+            ]
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
