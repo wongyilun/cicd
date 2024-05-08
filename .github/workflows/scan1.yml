@@ -23,17 +23,17 @@ jobs:
           format: 'table'
           output: 'trivy-report.txt'
           severity: 'HIGH,CRITICAL'
-      - name: Slack actions vulnerabilities found
-        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
-        uses: slackapi/slack-github-action@v1.26.0
-        with:
-          payload: |
-            {
-            "text": "Ref: ${{ github.ref_name }}\nEvent: ${{ github.event_name }}\nActions URL: ${{ github.event.pull_request.html_url }}\nCommit: ${{ github.event.head_commit.url }}\nScan failed - ${{ github.actor }}\nFailed trivy scan, see uploaded report}"
-            }
-        env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+#      - name: Slack actions vulnerabilities found
+#        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
+#        uses: slackapi/slack-github-action@v1.26.0
+#        with:
+#          payload: |
+#            {
+#            "text": "Ref: ${{ github.ref_name }}\nEvent: ${{ github.event_name }}\nActions URL: ${{ github.event.pull_request.html_url }}\nCommit: ${{ github.event.head_commit.url }}\nScan failed - ${{ github.actor }}\nFailed trivy scan, see uploaded report}"
+#            }
+#        env:
+#            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+#            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Read Trivy report content
         run: cat trivy-report.txt
       - name: Upload report
@@ -42,7 +42,7 @@ jobs:
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          content: 'file content'
+          content: 'trivy-report.txt'
           file_type: 'text'
           file_name: 'trivy-report.txt'
           title: 'title of file'
