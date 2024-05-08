@@ -34,19 +34,12 @@ jobs:
         env:
             SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
             SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      - name: Upload Trivy report to Slack
-        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
-        uses: MeilCli/slack-upload-file@v4
+      - name: Upload to slack step
+        uses: adrey/slack-file-upload-action@master
         with:
-          slack_token: ${{ secrets.SLACK_TOKEN }}
-          content: 'file content'
-          file_type: 'text'
-          file_name: 'trivy-report.txt'
-          title: 'trivy report'
-          initial_comment: 'post by slack-upload-file'
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          token: ${{ secrets.SLACK_TOKEN }}
+          path: trivy_report.txt
+          channel: random
 #      - name: Upload report
 #        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
 #        uses: MeilCli/slack-upload-file@v4
@@ -93,6 +86,8 @@ jobs:
         shell: bash
         env:
             KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+      - name: Check key
+        run: echo cosign.key
       - name: Sign Docker Image
         env:
             COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
