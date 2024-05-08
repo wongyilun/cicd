@@ -44,13 +44,13 @@ jobs:
         if: steps.trivy_scan.outputs.vulnerabilities != '[]'
         uses: slackapi/slack-github-action@v1.26.0
         with:
-        payload: |
-          {
-          "text": "${{ steps.read_trivy_report.outputs.report_content }}"
-          }
-  env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          payload: |
+            {
+            "text": "${{ steps.read_trivy_report.outputs.report_content }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Upload trivy report
         if: steps.trivy_scan.outputs.vulnerabilities != '[]'
         uses: slackapi/slack-github-action@v1.26.0
