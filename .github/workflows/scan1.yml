@@ -41,7 +41,7 @@ jobs:
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          content: ${{ steps.trivy_scan.outputs.text_content }}
+          content: ${{ steps.trivy_scan.outputs.trivy-results.txt }}
           file_type: 'text'
           file_name: 'trivy-results.txt'
           title: 'Trivy Report'
