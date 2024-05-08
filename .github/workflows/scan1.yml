@@ -35,38 +35,18 @@ jobs:
             SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
             SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Read Trivy report content
+        run: echo cat trivy-report.txt
+      - name: Upload report
         if: steps.trivy_scan.outputs.vulnerabilities != '[]'
-        id: read_trivy_report
-        run: echo "::set-output name=report_content::$(cat trivy-report.txt)"
-
-      - name: Upload trivy report
-        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
-        uses: slackapi/slack-github-action@v1.26.0
+        uses: MeilCli/slack-upload-file@v4
         with:
-          payload: |
-            {
-            "text": "Trivy report",
-            "attachments": [
-            {
-            "text": "${{ steps.read_trivy_report.outputs.report_content }}"
-            }
-            ]
-            }
-        env:
-          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-#      - name: Upload report
-#        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
-#        uses: MeilCli/slack-upload-file@v4
-#        with:
-#          slack_token: ${{ secrets.SLACK_TOKEN }}
-#          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-#          content: 'file content'
-#          file_type: 'text'
-#          file_name: 'trivy-report.txt'
-#          title: 'title of file'
-#          initial_comment: 'post by slack-upload-file'
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
+          content: 'file content'
+          file_type: 'text'
+          file_name: 'trivy-report.txt'
+          title: 'title of file'
+          initial_comment: 'post by slack-upload-file'
   build_push_docker:
     needs: scan_repo
     runs-on: ubuntu-latest
