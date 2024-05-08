@@ -39,7 +39,7 @@ jobs:
         with:
           token: ${{ secrets.SLACK_TOKEN }}
           path: trivy-report.txt
-          channel: random
+          channel: ${{ secrets.SLACK_CHANNEL_ID }}
 #      - name: Upload report
 #        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
 #        uses: MeilCli/slack-upload-file@v4
