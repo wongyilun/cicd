@@ -34,18 +34,17 @@ jobs:
         env:
             SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
             SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      - name: display image
-        run: cat trivy-report.txt
-      - name: Upload to slack step
-        uses: MeilCli/slack-upload-file@v4
+      - name: Upload trivy report
+        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
+        uses: slackapi/slack-github-action@v1.26.0
         with:
-          slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          content: 'file content'
-          file_type: 'text'
-          file_name: 'trivy-report.txt'
-          title: 'trivy report'
-          initial_comment: 'post by slack-upload-file'
+          payload: |
+            {
+            "text": "cat trivy-report.txt"
+            }
+        env:
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 #      - name: Upload report
 #        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
 #        uses: MeilCli/slack-upload-file@v4
