@@ -81,7 +81,7 @@ jobs:
         env:
             KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
       - name: Sign Docker Image
-        run: cosign sign --key cosign.key ${{ secrets.DOCKER_USERNAME }}/my-app:${{ github.sha }}
+        run: cosign sign --key cosign.key ${{ secrets.DOCKER_USERNAME }}/my-app:
         env:
             COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
             COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
