@@ -29,13 +29,30 @@ jobs:
         if: steps.trivy_scan.outputs.vulnerabilities != '[]'
         uses: slackapi/slack-github-action@v1.26.0
         with:
-          payload: |
-            {
-            "text": "Ref: ${{ github.ref_name }}\nEvent: ${{ github.event_name }}\nActions URL: ${{ github.event.pull_request.html_url }}\nCommit: ${{ github.event.head_commit.url }}\nScan failed - ${{ github.actor }}\nFailed trivy scan, see uploaded report}"
+        payload: |
+          {
+          "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+          "blocks": [
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
             }
+          }
+          ]  
+          }
         env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+#        with:
+#          payload: |
+#            {
+#            "text": "Ref: ${{ github.ref_name }}\nEvent: ${{ github.event_name }}\nActions URL: ${{ github.event.pull_request.html_url }}\nCommit: ${{ github.event.head_commit.url }}\nScan failed - ${{ github.actor }}\nFailed trivy scan, see uploaded report"
+#            }
+#        env:
+#            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+#            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Upload Trivy report to Slack
         uses: MeilCli/slack-upload-file@v4
         with:
