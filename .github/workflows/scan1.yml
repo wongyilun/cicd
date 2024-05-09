@@ -43,7 +43,7 @@ jobs:
           file_path: 'trivy-results.txt'
           initial_comment: 'upload of trivy report'
       - name: Terminate workflow in failure
-        #if: failure()
+        if: success()
         run: exit 1
   build_push_docker:
     needs: scan_repo
