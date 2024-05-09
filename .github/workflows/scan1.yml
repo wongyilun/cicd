@@ -75,17 +75,11 @@ jobs:
         uses: sigstore/cosign-installer@v3.5.0
       - name: Check installed
         run: cosign version
-      - name: Write signing key to disk
-        run: 'echo "$KEY" > cosign.key'
-        shell: bash
-        env:
-            KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
-      - name: Check key
-        run: echo cosign.key
       - name: Sign Docker Image
+        run: |
+          cosign sign --key cosign.key <accountname>/myapp:${{ github.sha }}
         env:
-            COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-        run: cosign sign --key cosign.key ${{ secrets.DOCKER_USERNAME }}/my-app/${{ github.sha }}
+          KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
       - name: Slack actions vulnerabilities not found
         uses: slackapi/slack-github-action@v1.26.0
         with:
