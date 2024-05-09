@@ -24,13 +24,14 @@ jobs:
           format: 'table'
           output: 'trivy-results.txt'
           severity: 'HIGH,CRITICAL'
-      - name: print report
-        run: cat trivy-results.txt
+      
   vulnerabilitiesflow:
     needs: scan_repo
     runs-on: ubuntu-latest
     if: needs.scan_repo.steps.trivy_scan.outputs.vulnerabilities != '[]'
     steps:
+      - name: print report
+        run: cat trivy-results.txt
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
