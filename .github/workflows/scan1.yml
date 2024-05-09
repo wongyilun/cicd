@@ -23,8 +23,10 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'HIGH,CRITICAL'
-          run: |
-            sarif-to-text trivy-results.sarif > trivy-results.txt
+      - name: convert report to text
+          run:sarif-to-text trivy-results.sarif > trivy-results.txt
+      - name: print report
+          run:cat trivy-results.txt
 #      - name: Slack actions vulnerabilities found
 #        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
 #        uses: slackapi/slack-github-action@v1.26.0
