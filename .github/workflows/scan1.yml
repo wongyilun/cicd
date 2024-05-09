@@ -102,13 +102,21 @@ jobs:
       - name: Slack actions vulnerabilities not found
         uses: slackapi/slack-github-action@v1.26.0
         with:
-          status: success
-          text: |
-            Image built and signed		
-            Name: wong yi lun
-            Matriculation Number: a0158012r
-            Email: e0036525@u.nus.edu
-            Git: ${{ github.repository }}
+          payload: |
+            {
+            "text": "Ref: ${{ github.ref_name }}\nEvent: ${{ github.event_name }}\nActions URL: ${{ github.event.pull_request.html_url }}\nCommit: ${{ github.event.head_commit.url }}\nImage built and signed\nName: wong yi lun\nMatriculation Number: a0158012r\nMatriculation Number: a0158012r\nEmail: e0036525@u.nus.edu\nGit: ${{ github.repository }}\nImage: https://hub.docker.com/repository/docker/${{ secrets.DOCKER_USERNAME }}/my-app/}"
+            }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK         
+#      - name: Slack actions vulnerabilities found
+#        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
+#        uses: slackapi/slack-github-action@v1.26.0
+#        with:
+#          payload: |
+#            {
+#            "text": "Ref: ${{ github.ref_name }}\nEvent: ${{ github.event_name }}\nActions URL: ${{ github.event.pull_request.html_url }}\nCommit: ${{ github.event.head_commit.url }}\nScan failed - ${{ github.actor }}\nFailed trivy scan, see uploaded report}"
+#            }
+#        env:
+#            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+#            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK 
