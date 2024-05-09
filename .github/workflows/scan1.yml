@@ -43,10 +43,12 @@ jobs:
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
           file_path: 'trivy-results.txt'
           initial_comment: 'upload of trivy report'
+      - name: Terminate workflow in failure
+        run: exit 1
   build_push_docker:
     needs: scan_repo
     runs-on: ubuntu-latest
-    if: steps.trivy_scan.outputs.vulnerabilities == '[]'
+    if: success()
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
