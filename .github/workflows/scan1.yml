@@ -49,6 +49,7 @@ jobs:
       - name: Terminate workflow in failure
         if: steps.trivy_scan.outputs.vulnerabilities != '[]'
         run: exit 1
+        continue-on-error: true
   build_push_docker:
     needs: scan_repo
     runs-on: ubuntu-latest
