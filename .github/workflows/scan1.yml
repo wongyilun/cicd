@@ -24,6 +24,8 @@ jobs:
           format: 'table'
           output: 'trivy-results.txt'
           severity: 'LOW'
+      - name: print report
+        run: cat trivy-results.txt
       - name: Slack Notification
         if: steps.trivy_scan.outputs.vulnerabilities != '[]'
         uses: rtCamp/action-slack-notify@v2
