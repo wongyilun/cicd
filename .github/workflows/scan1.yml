@@ -42,9 +42,8 @@ jobs:
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
           file_path: 'trivy-results.txt'
           initial_comment: 'upload of trivy report'
-      - name: Terminate workflow in failure
-        if: success()
-        run: exit 1
+      #- name: Terminate workflow in failure
+      #  run: exit 1
   build_push_docker:
     needs: scan_repo
     runs-on: ubuntu-latest
