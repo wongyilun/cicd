@@ -27,7 +27,7 @@ jobs:
       - name: print report
         run: cat trivy-results.txt
       - name: Slack Notification
-        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
+        if: steps.trivy_scan.outputs.trivy_scan != null
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_CHANNEL: 'test-submission'
@@ -37,7 +37,7 @@ jobs:
           SLACK_TITLE: Scan failed by ${{ github.actor }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Upload Trivy report to Slack
-        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
+        if: steps.trivy_scan.outputs.trivy_scan != null
         uses: MeilCli/slack-upload-file@v4
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
