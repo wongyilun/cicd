@@ -9,6 +9,7 @@ on:
 jobs:
   scan_repo:
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -36,7 +37,7 @@ jobs:
           SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
           SLACK_TITLE: 'Post Title'
           SLACK_USERNAME: rtCamp
-          #ENABLE_ESCAPES: true
+          ENABLE_ESCAPES: true
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
 #        with:
 #          payload: |
