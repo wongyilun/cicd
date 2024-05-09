@@ -31,7 +31,7 @@ jobs:
     if: needs.scan_repo.steps.trivy_scan.outputs.vulnerabilities != '[]'
     steps:
       - name: print report
-        run: cat trivy-results.txt
+        run: cat needs.scan_repo.steps.trivy_scan.outputs.trivy-results.txt
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
