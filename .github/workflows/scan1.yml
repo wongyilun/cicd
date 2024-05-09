@@ -26,8 +26,12 @@ jobs:
           severity: 'HIGH,CRITICAL'
       - name: print report
         run: cat trivy-results.txt
+  vulnerabilitiesflow:
+    needs: scan_repo
+    runs-on: ubuntu-latest
+    if: needs.scan_repo.steps.trivy_scan.outputs.vulnerabilities != '[]'
+    steps:
       - name: Slack Notification
-        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_CHANNEL: 'test-submission'
@@ -36,22 +40,17 @@ jobs:
           SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
           SLACK_TITLE: Scan failed by ${{ github.actor }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-        continue-on-error: true
       - name: Upload Trivy report to Slack
-        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
         uses: MeilCli/slack-upload-file@v4
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
           file_path: 'trivy-results.txt'
           initial_comment: 'upload of trivy report'
-        continue-on-error: true
       - name: Terminate workflow in failure
-        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
         run: exit 1
-        continue-on-error: true
   build_push_docker:
-    needs: scan_repo
+    needs: vulnerabilitiesflow
     runs-on: ubuntu-latest
     if: success()
     steps:
