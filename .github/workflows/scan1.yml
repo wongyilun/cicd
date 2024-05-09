@@ -23,30 +23,27 @@ jobs:
           ignore-unfixed: true
           format: 'table'
           output: 'trivy-results.txt'
-          severity: 'MEDIUM'
-  notify_upload:
-    needs: scan_repo
-    if: failure()  
-    runs-on: ubuntu-latest     
-    steps:
+          severity: 'HIGH,CRITICAL'
       - name: Slack Notification
+        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_CHANNEL: 'test-submission'
           SLACK_COLOR: ${{ job.status }}
           SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: 'Failed trivy scan, see uploaded report!'
+          SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
           SLACK_TITLE: Scan failed by ${{ github.actor }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Upload Trivy report to Slack
+        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
         uses: MeilCli/slack-upload-file@v4
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
           file_path: 'trivy-results.txt'
           initial_comment: 'upload of trivy report'
-  #      - name: Terminate workflow in failure
-  #        run: exit 1
+      - name: Terminate workflow in failure
+        run: exit 1
   build_push_docker:
     needs: scan_repo
     runs-on: ubuntu-latest
@@ -97,9 +94,6 @@ jobs:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           DIGEST: ${{ needs.build_push_docker.steps.buildpush.outputs.digest }}
           TAGS: ${{ needs.build_push_docker.steps.docker_meta.outputs.tags }}
-  #      - name: Verify Docker Image
-  #        run: |
-  #          cosign verify key --certificate-identity ${{ secrets.DOCKER_USERNAME }}/my-app:${{ github.sha }} ./cosign.pub
       - name: Slack actions vulnerabilities not found
         uses: rtCamp/action-slack-notify@v2
         env:
@@ -107,8 +101,8 @@ jobs:
           SLACK_COLOR: ${{ job.status }}
           SLACK_ICON: https://github.com/rtCamp.png?size=48
           SLACK_MESSAGE:  |
-            *Name:* wong yi lun
-            *Matriculation Number:* a0158012r
+            *Name:* Wong Yi Lun
+            *Matriculation Number:* A0158012R
             *Email:* e0036525@u.nus.edu
             *Git:* https://github.com/${{ github.repository }}
             *Image:* https://hub.docker.com/repository/docker/${{ secrets.DOCKER_USERNAME }}/my-app/
