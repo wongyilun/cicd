@@ -42,6 +42,7 @@ jobs:
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
           file_path: 'trivy-results.txt'
           initial_comment: 'upload of trivy report'
+        continue-on-error: true
       - name: Terminate workflow in failure
         if: needs.scan_repo.steps.trivy_scan.outputs.vulnerabilities != '[]'
         run: exit 1
