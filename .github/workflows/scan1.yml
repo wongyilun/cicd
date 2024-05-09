@@ -23,14 +23,6 @@ jobs:
           format: 'table'
           output: 'trivy-results.txt'
           severity: 'HIGH,CRITICAL'
-      - name: PRNT report
-        run: cat trivy-results.txt
-      - name: Slack Notification vulnerabilities found
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_CHANNEL: 'test-submission'
-          SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
 #        with:
 #          payload: |
 #            {
