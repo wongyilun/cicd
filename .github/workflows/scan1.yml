@@ -41,17 +41,12 @@ jobs:
 #            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 #            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Upload Trivy report to Slack
-        env:
-          reort: ${{ steps.reportSetter.outputs.report }}
         uses: MeilCli/slack-upload-file@v4
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          content: ${{ steps.reportSetter.outputs.report }}
-          file_type: 'text'
-          file_name: 'trivy-results.txt'
-          title: 'Trivy Scan Results'
-          initial_comment: 'scan results'
+          file_path: 'trivy-results.txt'
+          initial_comment: 'post by slack-upload-file'
   build_push_docker:
     needs: scan_repo
     runs-on: ubuntu-latest
