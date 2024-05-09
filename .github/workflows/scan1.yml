@@ -75,12 +75,6 @@ jobs:
         uses: sigstore/cosign-installer@v3.5.0
       - name: Check installed
         run: cosign version
-      - name: Sign image with a key
-        run: |
-          cosign sign --yes --key env://COSIGN_PRIVATE_KEY ${{ secrets.DOCKER_USERNAME }}/my-app:${{ github.sha	 }}
-        env:
-          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
-          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
       - name: Sign Docker Image
         run: |
           cosign sign --key ~/.cosign/cosign.key ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }}
