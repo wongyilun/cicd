@@ -23,9 +23,9 @@ jobs:
           ignore-unfixed: true
           format: 'table'
           output: 'trivy-results.txt'
-          severity: 'HIGH,CRITICAL'
+          severity: 'LOW'
       - name: Slack Notification
-        #if: failure()
+        if: failure()
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_CHANNEL: 'submission'
@@ -35,7 +35,7 @@ jobs:
           SLACK_TITLE: Scan failed by ${{ github.actor }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Upload Trivy report to Slack
-        #if: failure()
+        if: failure()
         uses: MeilCli/slack-upload-file@v4
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
@@ -43,7 +43,7 @@ jobs:
           file_path: 'trivy-results.txt'
           initial_comment: 'upload of trivy report'
       - name: Terminate workflow in failure
-        #if: failure()
+        if: failure()
         run: exit 1
   build_push_docker:
     needs: scan_repo
