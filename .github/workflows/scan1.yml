@@ -25,26 +25,11 @@ jobs:
           severity: 'HIGH,CRITICAL'
       - name: PRNT report
         run: cat trivy-results.txt
-      - name: Slack actions vulnerabilities
-        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
-        uses: slackapi/slack-github-action@v1.26.0
-        with:
-          payload: |
-            {
-            "text": "Ref: ${{ github.ref_name }}\nEvent: ${{ github.event_name }}\nActions URL: ${{ github.event.pull_request.html_url }}\nCommit: ${{ github.event.head_commit.url }}\nScan failed - ${{ github.actor }}\nFailed trivy scan, see uploaded report"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
       - name: Slack Notification vulnerabilities found
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_CHANNEL: 'test-submission'
-          SLACK_COLOR: ${{ job.status }}
-          SLACK_ICON: https://github.com/rtCamp.png?size=48
           SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
-          SLACK_TITLE: 'Post Title'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
 #        with:
 #          payload: |
