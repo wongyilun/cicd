@@ -75,11 +75,24 @@ jobs:
         uses: sigstore/cosign-installer@v3.5.0
       - name: Check installed
         run: cosign version
-      - name: Generate cosign.key
-        run: openssl genpkey -algorithm RSA -out cosign.key
+      - name: Generate cosign keypair
+        run: |
+          cosign generate-key-pair
+      - name: Store public key in repository
+        run: |
+          mkdir -p keys
+          cp ~/.cosign/cosign.pub keys/cosign.pub
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add keys/cosign.pub
+          git commit -m "Add cosign public key"
+          git push 
       - name: Sign Docker Image
         run: |
-          cosign sign --key cosign.key ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }}
+          cosign sign --key ~/.cosign/cosign.key ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }}
+      - name: Verify Docker Image
+        run: |
+          cosign verify -key keys/cosign.pub ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }}
       - name: Slack actions vulnerabilities not found
         uses: slackapi/slack-github-action@v1.26.0
         with:
