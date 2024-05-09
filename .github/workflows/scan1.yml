@@ -46,7 +46,7 @@ jobs:
   build_push_docker:
     needs: scan_repo
     runs-on: ubuntu-latest
-    if: success()
+    if: steps.trivy_scan.outputs.vulnerabilities == '[]'
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -83,8 +83,6 @@ jobs:
       - name: Sign Docker Image
         env:
             COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-            DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: cosign sign --key cosign.key ${{ secrets.DOCKER_USERNAME }}/my-app/${{ github.sha }}
       - name: Slack actions vulnerabilities not found
         uses: slackapi/slack-github-action@v1.26.0
