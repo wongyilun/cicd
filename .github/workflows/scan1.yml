@@ -9,7 +9,6 @@ on:
 jobs:
   scan_repo:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
