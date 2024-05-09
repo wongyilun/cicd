@@ -91,14 +91,14 @@ jobs:
       - name: Sign Docker Image
         run: |
           echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
-          cosign sign --key cosign.key ${{ secrets.DOCKER_USERNAME }}/Repositories/myapp:${{ github.sha }}
+          cosign sign --key cosign.key ${{ secrets.DOCKER_USERNAME }}/my-app:${{ github.sha }}
         env:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           DIGEST: ${{ needs.build_push_docker.steps.buildpush.outputs.digest }}
           TAGS: ${{ needs.build_push_docker.steps.docker_meta.outputs.tags }}
       - name: Verify Docker Image
         run: |
-          cosign verify key ./cosign.pub ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }}
+          cosign verify key ./cosign.pub ${{ secrets.DOCKER_USERNAME }}/my-app:${{ github.sha }}
       - name: Slack actions vulnerabilities not found
         uses: slackapi/slack-github-action@v1.26.0
         with:
