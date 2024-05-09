@@ -8,6 +8,7 @@ on:
       
 jobs:
   scan_repo:
+    if: "!startsWith(github.event.head_commit.message, '#NORUN')"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
@@ -32,14 +33,6 @@ jobs:
           SLACK_MESSAGE: 'Failed trivy scan, see uploaded report!'
           SLACK_TITLE: Scan failed by ${{ github.actor }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-#        with:
-#          payload: |
-#            {
-#            "text": "Ref: ${{ github.ref_name }}\nEvent: ${{ github.event_name }}\nActions URL: ${{ github.event.pull_request.html_url }}\nCommit: ${{ github.event.head_commit.url }}\nScan failed - ${{ github.actor }}\nFailed trivy scan, see uploaded report"
-#            }
-#        env:
-#            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-#            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Upload Trivy report to Slack
         uses: MeilCli/slack-upload-file@v4
         with:
@@ -108,7 +101,7 @@ jobs:
           SLACK_CHANNEL: 'test-submission'
           SLACK_COLOR: ${{ job.status }}
           SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: 'Name: wong yi lun\nMatriculation Number: a0158012r\nEmail: e0036525@u.nus.edu\nGit: ${{ github.repository }}\nImage: https://hub.docker.com/repository/docker/${{ secrets.DOCKER_USERNAME }}/my-app/'
+          SLACK_MESSAGE: '*Name:* wong yi lun\nMatriculation Number: a0158012r\nEmail: e0036525@u.nus.edu\nGit: ${{ github.repository }}\nImage: https://hub.docker.com/repository/docker/${{ secrets.DOCKER_USERNAME }}/my-app/'
           SLACK_TITLE: Image built and signed
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
    
