@@ -61,10 +61,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build and push
+        id: buildpush
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/my-app:${{ github.sha	 }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/my-app:${{ github.sha }}
   sign_and_notify:
     needs: build_push_docker
     runs-on: ubuntu-latest
@@ -88,9 +89,10 @@ jobs:
           cosign sign --key cosign.key ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }}
         env:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          DIGEST: ${{ steps.build-and-push.outputs.digest }}
       - name: Verify Docker Image
         run: |
-          cosign verify key ./cosign.pub ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }}
+          cosign verify key ./cosign.pub ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }}@${{ needs.build_push_docker.steps.buildpush.outputs.digest }}
       - name: Slack actions vulnerabilities not found
         uses: slackapi/slack-github-action@v1.26.0
         with:
