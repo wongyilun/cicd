@@ -23,7 +23,7 @@ jobs:
           ignore-unfixed: true
           format: 'table'
           output: 'trivy-results.txt'
-          severity: 'HIGH,CRITICAL'
+          severity: 'MEDIUM'
   notify_upload:
     needs: scan_repo
     if: failure()  
@@ -107,11 +107,11 @@ jobs:
           SLACK_COLOR: ${{ job.status }}
           SLACK_ICON: https://github.com/rtCamp.png?size=48
           SLACK_MESSAGE:  |
-            **Name:** wong yi lun\n
-            **Matriculation Number:** a0158012r\n
-            **Email:** e0036525@u.nus.edu\n
-            **Git:** https://github.com/${{ github.repository }}\n
-            **Image:** https://hub.docker.com/repository/docker/${{ secrets.DOCKER_USERNAME }}/my-app/\n
+            *Name:* wong yi lun
+            *Matriculation Number:* a0158012r
+            *Email:* e0036525@u.nus.edu
+            *Git:* https://github.com/${{ github.repository }}
+            *Image:* https://hub.docker.com/repository/docker/${{ secrets.DOCKER_USERNAME }}/my-app/
           SLACK_TITLE: Image built and signed
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
    
