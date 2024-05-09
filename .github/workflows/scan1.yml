@@ -25,6 +25,8 @@ jobs:
           severity: 'HIGH,CRITICAL'
       - name: PRNT report
         run: cat trivy-results.txt
+      - name: Debug SLACK_WEBHOOK_URL
+        run: echo $SLACK_WEBHOOK_URL
       - name: Slack Notification vulnerabilities found
         uses: rtCamp/action-slack-notify@v2
         env:
