@@ -27,9 +27,9 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_CHANNEL: 'test-submission'
-          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+          SLACK_COLOR: ${{ job.status }}
           SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
+          SLACK_MESSAGE: 'Failed trivy scan, see uploaded report!'
           SLACK_TITLE: Scan failed by ${{ github.actor }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 #        with:
@@ -103,12 +103,12 @@ jobs:
 #        run: |
 #          cosign verify key --certificate-identity ${{ secrets.DOCKER_USERNAME }}/my-app:${{ github.sha }} ./cosign.pub
       - name: Slack actions vulnerabilities not found
-        uses: slackapi/slack-github-action@v1.26.0
-        with:
-          payload: |
-            {
-            "text": "Ref: ${{ github.ref_name }}\nEvent: ${{ github.event_name }}\nActions URL: ${{ github.event.pull_request.html_url }}\nCommit: ${{ github.event.head_commit.url }}\nImage built and signed\nName: wong yi lun\nMatriculation Number: a0158012r\nMatriculation Number: a0158012r\nEmail: e0036525@u.nus.edu\nGit: ${{ github.repository }}\nImage: https://hub.docker.com/repository/docker/${{ secrets.DOCKER_USERNAME }}/my-app/}"
-            }
+        uses: rtCamp/action-slack-notify@v2
         env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK         
+          SLACK_CHANNEL: 'test-submission'
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_ICON: https://github.com/rtCamp.png?size=48
+          SLACK_MESSAGE: 'Image built and signed\nName: wong yi lun\nMatriculation Number: a0158012r\nEmail: e0036525@u.nus.edu\nGit: ${{ github.repository }}\nImage: https://hub.docker.com/repository/docker/${{ secrets.DOCKER_USERNAME }}/my-app/'
+          SLACK_TITLE: Scan failed by ${{ github.actor }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+   
