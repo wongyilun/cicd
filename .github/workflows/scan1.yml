@@ -25,10 +25,6 @@ jobs:
           severity: 'HIGH,CRITICAL'
       - name: PRNT report
         run: cat trivy-results.txt
-      - name: set report
-        id: reportSetter
-        run: echo "report=$(cat trivy-results.txt)" >> $GITHUB_ENV
-        shell: bash
 #      - name: Slack actions vulnerabilities found
 #        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
 #        uses: slackapi/slack-github-action@v1.26.0
