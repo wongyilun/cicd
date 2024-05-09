@@ -20,11 +20,11 @@ jobs:
         with:
           scan-type: 'fs'
           ignore-unfixed: true
-          format: 'sarif'
-          output: 'trivy-results.sarif'
+          format: 'table'
+          output: 'trivy-results.txt'
           severity: 'HIGH,CRITICAL'
       - name: PRNT report
-        run: Cat trivy-results.sarif
+        run: $(Cat trivy-results.txt)
       - name: set report
         id: reportSetter
         run: echo "report=$(cat trivy-results.txt)" >> $GITHUB_ENV
