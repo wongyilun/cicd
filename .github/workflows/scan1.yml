@@ -20,13 +20,9 @@ jobs:
         with:
           scan-type: 'fs'
           ignore-unfixed: true
-          format: 'sarif'
-          output: 'trivy-results.sarif'
+          format: 'table'
+          output: 'trivy-results.txt'
           severity: 'HIGH,CRITICAL'
-      - name: convert report to text
-        run: sarif-to-text trivy-results.sarif > trivy-results.txt
-      - name: print report
-        run: cat trivy-results.txt
 #      - name: Slack actions vulnerabilities found
 #        if: steps.trivy_scan.outputs.vulnerabilities != '[]'
 #        uses: slackapi/slack-github-action@v1.26.0
@@ -43,11 +39,11 @@ jobs:
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          content: ${{ steps.trivy_scan.outputs }}
+          content: '${{ steps.trivy_scan.outputs.output }}'
           file_type: 'text'
           file_name: 'trivy-results.txt'
-          title: 'Trivy Report'
-          initial_comment: 'Trivy scan report uploaded'
+          title: 'Trivy Scan Results'
+          initial_comment: 'scan results'
   build_push_docker:
     needs: scan_repo
     runs-on: ubuntu-latest
