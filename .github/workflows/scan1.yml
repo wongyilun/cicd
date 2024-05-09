@@ -23,7 +23,7 @@ jobs:
           ignore-unfixed: true
           format: 'table'
           output: 'trivy-results.txt'
-          severity: 'HIGH,CRITICAL'
+          severity: 'LOW'
       - name: print report
         run: cat trivy-results.txt
       - name: Slack Notification
