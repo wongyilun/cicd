@@ -108,7 +108,7 @@ jobs:
           SLACK_CHANNEL: 'test-submission'
           SLACK_COLOR: ${{ job.status }}
           SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: 'Image built and signed\nName: wong yi lun\nMatriculation Number: a0158012r\nEmail: e0036525@u.nus.edu\nGit: ${{ github.repository }}\nImage: https://hub.docker.com/repository/docker/${{ secrets.DOCKER_USERNAME }}/my-app/'
-          SLACK_TITLE: Scan failed by ${{ github.actor }}
+          SLACK_MESSAGE: 'Name: wong yi lun\nMatriculation Number: a0158012r\nEmail: e0036525@u.nus.edu\nGit: ${{ github.repository }}\nImage: https://hub.docker.com/repository/docker/${{ secrets.DOCKER_USERNAME }}/my-app/'
+          SLACK_TITLE: Image built and signed
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
    
