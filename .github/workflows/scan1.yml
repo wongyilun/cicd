@@ -80,7 +80,7 @@ jobs:
         run: |
           echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
           cosign sign --key cosign.key ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }}
-          env:
+        env:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
       - name: Verify Docker Image
         run: |
