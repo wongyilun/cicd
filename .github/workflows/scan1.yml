@@ -23,7 +23,7 @@ jobs:
           ignore-unfixed: true
           format: 'table'
           output: 'trivy-results.txt'
-          severity: 'HIGH,CRITICAL'
+          severity: 'LOW'
       - name: Slack Notification
         if: needs.scan_repo.steps.trivy_scan.outputs.vulnerabilities != '[]'
         uses: rtCamp/action-slack-notify@v2
