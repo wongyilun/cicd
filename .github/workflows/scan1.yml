@@ -81,7 +81,7 @@ jobs:
       - name: Store public key in repository
         run: |
           mkdir -p keys
-          cp cosign.pub keys/cosign.pub
+          cp cosign/cosign.pub cosign/cosign.pub
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
           git add keys/cosign.pub
